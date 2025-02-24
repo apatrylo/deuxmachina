@@ -1,27 +1,24 @@
-import Link from 'next/link'
+import Link from "next/link";
 
 export default function Layout({ children }) {
+  // Layout component that wraps around all pages
   return (
     <div className="layout">
       <header>
         <Link href="/">
-          <a>
-            <h1>
-              <span>Just Add</span>
-              <span>Marmite</span>
-            </h1>
-            <h2>Spread The Joy</h2>
-          </a>
+          <h1>
+            <span>deux</span>
+            <span>MACHINA</span>
+          </h1>
+          <h2>ultimate UX resource repo</h2>
         </Link>
       </header>
 
-      <div className="page-content">
-        { children }
-      </div>
+      <div className="page-content">{children}</div>
 
       <footer>
-        <p>Copyright 2021 Just Add Marmite :)</p>
+        <p>Copyright 2021 deux machina</p>
       </footer>
     </div>
-  )
+  );
 }

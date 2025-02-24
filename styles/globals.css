@@ -1,10 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+:root {
+  /* Colors */
+  --color-primary: #7c3aed; /* vibrant purple */
+  --color-secondary: #2dd4bf; /* turquoise */
+  --color-text: #1f2937; /* dark slate */
+  --color-text-light: #6b7280; /* cool gray */
+  --color-background: rgb(234, 237, 239); /* light gray-white */
+  --color-muted: #e5e7eb; /* subtle gray */
+
+  /* Typography */
+  --font-primary: "Roboto", sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Border radius */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+  /* Layout */
+  --max-width: 87.5rem;
+  --container-padding: 1.25rem;
+  --header-spacing: 3.75rem;
+}
 
 body {
-  background: #F4E640;
+  background: var(--color-background);
   margin: 0;
-  font-family: 'Roboto';
-  font-size: 1.5em;  
+  font-family: var(--font-primary);
+  font-size: var(--font-size-xl);
 }
 .layout {
   min-height: 100vh;
@@ -13,15 +50,16 @@ body {
 }
 header {
   text-align: center;
-  margin: 60px 0;
+  margin: var(--header-spacing) 0;
 }
 header a {
   text-decoration: none;
-  color: black;
+  color: var(--color-text);
   text-transform: uppercase;
   display: inline-block;
 }
-header h1, header h2 {
+header h1,
+header h2 {
   margin: 0;
 }
 header span {
@@ -29,28 +67,28 @@ header span {
   line-height: 1em;
 }
 header span:first-child {
-  font-size: 1em;
+  font-size: var(--font-size-md);
   font-weight: 400;
 }
 header span:last-child {
-  font-size: 1.5em;
-  font-weight: 800;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
 }
 header h2 {
-  font-size: 1.2em;
+  font-size: var(--font-size-lg);
   font-weight: 400;
 }
 footer {
-  background: #111;
-  color: #bbb;
-  padding: 40px;
+  background: var(--color-text);
+  color: var(--color-text-light);
+  padding: var(--space-2xl);
   text-align: center;
-  margin-top: auto
+  margin-top: auto;
 }
 .page-content {
-  max-width: 1200px;
-  margin: 20px auto 80px;
-  padding: 0 20px;
   width: 100%;
   box-sizing: border-box;
+  margin: 0 auto;
+  max-width: var(--max-width);
+  padding: 0 var(--container-padding);
 }
