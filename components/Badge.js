@@ -6,25 +6,14 @@ const Badge = ({ text }) => {
       {text}
       <style jsx>{`
         .badge {
-          border: 1px solid rgba(147, 51, 234, 0.3);
+          border: 1px solid #e2e8f0;
           display: inline-block;
-          padding: 0.25rem var(--space-md);
+          padding: 0.25rem 0.75rem;
           margin: 0.25rem;
-          border-radius: var(--radius-full);
-          background-color: #e5e7eb;
-          color: var(--color-text);
-          font-size: 1rem;
-          backdrop-filter: blur(4px);
-          animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-          from {
-            box-shadow: 0 0 5px rgba(147, 51, 234, 0.1);
-          }
-          to {
-            box-shadow: 0 0 10px rgba(147, 51, 234, 0.2);
-          }
+          border-radius: 9999px;
+          background-color: #f1f5f9;
+          color: #334155;
+          font-size: 0.875rem;
         }
       `}</style>
     </span>
