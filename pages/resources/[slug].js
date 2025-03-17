@@ -37,7 +37,7 @@ export async function getStaticProps({ params }) {
   return {
     props: {
       resource: items[0],
-      revalidate: 10, // Revalidate the page every 10 seconds
+      revalidate: 1, // Revalidate the page every 10 seconds
     },
   };
 }
