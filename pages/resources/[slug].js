@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { createClient } from "contentful";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import Badge from "../../components/Badge"; // Import the Badge component.
 import Skeleton from "../../components/Skeleton"; // Import the Skeleton component.
 
 // Create a Contentful client
@@ -83,8 +82,13 @@ export default function ResourceDetails({ resource }) {
         <div className="resource-details-content">
           <div className="text-content">
             <h1>{title}</h1>
-            <div className="badge">
-              {tags && tags.map((tag) => <Badge key={tag} text={tag} />)}
+            <div className="badges-container">
+              {tags &&
+                tags.map((tag) => (
+                  <span key={tag} className="badge">
+                    {tag}
+                  </span>
+                ))}
             </div>
             <div className="description">
               {description && documentToReactComponents(description)}
@@ -151,6 +155,23 @@ export default function ResourceDetails({ resource }) {
           display: flex;
           flex-direction: column;
           gap: 1.5rem;
+        }
+
+        .badges-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+
+        .badge {
+          display: inline-block;
+          background-color: #f3f4f6;
+          color: #374151;
+          font-size: 0.875rem;
+          font-weight: 500;
+          padding: 0.375rem 0.75rem;
+          border-radius: 9999px;
+          line-height: 1;
         }
 
         .embed-and-link {
