@@ -36,12 +36,11 @@ export async function getStaticProps({ params }) {
 
   return {
     props: {
-      resources: res.items, // This is an array of objects fetched from Contentful
+      resources: items[0], // Use items instead of res.items
     },
     revalidate: 60, // Revalidate the page every 60 seconds
   };
 }
-
 // The ResourceDetails component receives the resource prop, which is an object fetched from Contentful.
 export default function ResourceDetails({ resource }) {
   const {
