@@ -36,9 +36,9 @@ export async function getStaticProps({ params }) {
 
   return {
     props: {
-      resource: items[0],
-      revalidate: 1, // Revalidate the page every 10 seconds
+      resources: res.items, // This is an array of objects fetched from Contentful
     },
+    revalidate: 60, // Revalidate the page every 60 seconds
   };
 }
 
