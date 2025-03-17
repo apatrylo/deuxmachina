@@ -30,17 +30,14 @@ export async function getStaticProps({ params }) {
     "fields.slug": params.slug, // Use the slug parameter to filter the query
   });
 
-  if (!items.length) {
-    return { notFound: true };
-  }
-
   return {
     props: {
-      resources: items[0], // Use items instead of res.items
+      resource: items[0], // Use items instead of res.items
     },
-    revalidate: 60, // Revalidate the page every 60 seconds
+    revalidate: 10, // Revalidate the page every 10 seconds
   };
 }
+
 // The ResourceDetails component receives the resource prop, which is an object fetched from Contentful.
 export default function ResourceDetails({ resource }) {
   const {
