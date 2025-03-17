@@ -15,6 +15,7 @@ export async function getStaticProps() {
   return {
     props: {
       resources: res.items, // This is an array of objects fetched from Contentful
+      revalidate: 10, // Revalidate the page every 10 seconds
     },
   };
 }

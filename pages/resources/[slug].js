@@ -37,14 +37,22 @@ export async function getStaticProps({ params }) {
   return {
     props: {
       resource: items[0],
+      revalidate: 10, // Revalidate the page every 10 seconds
     },
   };
 }
 
 // The ResourceDetails component receives the resource prop, which is an object fetched from Contentful.
 export default function ResourceDetails({ resource }) {
-  const { featuredImage, title, description, tags, content, resourceUrl } =
-    resource.fields;
+  const {
+    featuredImage,
+    title,
+    description,
+    tags,
+    content,
+    resourceUrl,
+    externalEmbed,
+  } = resource.fields;
 
   const [isLoaded, setIsLoaded] = React.useState(false);
 
@@ -52,6 +60,9 @@ export default function ResourceDetails({ resource }) {
     setIsLoaded(true);
   }, []);
 
+  // Return the JSX for the resource details page
+  // This includes a banner image, title, tags, description, and external embed/link
+  // The component uses CSS-in-JS with styled-jsx for styling
   return (
     <>
       <div className={`resource-details ${isLoaded ? "loaded" : ""}`}>
@@ -73,18 +84,28 @@ export default function ResourceDetails({ resource }) {
               {documentToReactComponents(description)}
             </div>
           </div>
-          <div className="resource-link-container">
-            <a
-              href={resourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="resource-link"
-            >
-              View Resource →
-            </a>
+          <div className="embed-and-link">
+            {/* Render external embed content if available */}
+            {externalEmbed && (
+              <div
+                className="external-embed"
+                dangerouslySetInnerHTML={{ __html: externalEmbed }}
+              />
+            )}
+            <div className="resource-link-container">
+              <a
+                href={resourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="resource-link"
+              >
+                View Resource →
+              </a>
+            </div>
           </div>
         </div>
       </div>
+      {/* Styles using styled-jsx for component-scoped CSS */}
       <style jsx>{`
         .resource-details {
           max-width: 1200px;
@@ -126,6 +147,17 @@ export default function ResourceDetails({ resource }) {
           gap: 1.5rem;
         }
 
+        .embed-and-link {
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+        }
+
+        .external-embed {
+          width: 100%;
+          margin-bottom: 1rem;
+        }
+
         h1 {
           font-size: 2.5rem;
           font-weight: 700;
@@ -157,6 +189,7 @@ export default function ResourceDetails({ resource }) {
           transform: translateY(-2px);
         }
 
+        /* Responsive layout for larger screens */
         @media (min-width: 768px) {
           .resource-details-content {
             grid-template-columns: 1fr 1fr;
