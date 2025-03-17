@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { createClient } from "contentful";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Badge from "../../components/Badge"; // Import the Badge component.
+import Skeleton from "../../components/Skeleton"; // Import the Skeleton component.
 
 // Create a Contentful client
 const client = createClient({
@@ -19,7 +20,7 @@ export const getStaticPaths = async () => {
 
   return {
     paths,
-    fallback: false,
+    fallback: true, // Show fallback loading state if a page is not found
   };
 };
 
@@ -47,7 +48,7 @@ export async function getStaticProps({ params }) {
 export default function ResourceDetails({ resource }) {
   // Add safety check for resource
   if (!resource) {
-    return <div>Loading resource...</div>;
+    return <Skeleton />;
   }
 
   // Safely destructure fields with defaults
