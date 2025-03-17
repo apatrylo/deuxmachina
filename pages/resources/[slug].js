@@ -30,6 +30,11 @@ export async function getStaticProps({ params }) {
     "fields.slug": params.slug, // Use the slug parameter to filter the query
   });
 
+  // If no resource found, return 404
+  if (!items.length) {
+    return { notFound: true };
+  }
+
   return {
     props: {
       resource: items[0], // Use items instead of res.items
@@ -40,15 +45,21 @@ export async function getStaticProps({ params }) {
 
 // The ResourceDetails component receives the resource prop, which is an object fetched from Contentful.
 export default function ResourceDetails({ resource }) {
+  // Add safety check for resource
+  if (!resource) {
+    return <div>Loading resource...</div>;
+  }
+
+  // Safely destructure fields with defaults
   const {
     featuredImage,
-    title,
+    title = "Untitled Resource",
     description,
-    tags,
+    tags = [],
     content,
-    resourceUrl,
+    resourceUrl = "#",
     externalEmbed,
-  } = resource.fields;
+  } = resource.fields || {};
 
   const [isLoaded, setIsLoaded] = React.useState(false);
 
@@ -57,27 +68,27 @@ export default function ResourceDetails({ resource }) {
   }, []);
 
   // Return the JSX for the resource details page
-  // This includes a banner image, title, tags, description, and external embed/link
-  // The component uses CSS-in-JS with styled-jsx for styling
   return (
     <>
       <div className={`resource-details ${isLoaded ? "loaded" : ""}`}>
         <div className="banner-image">
-          <img
-            src={"https:" + featuredImage.fields.file.url}
-            alt={title + " thumbnail"}
-          />
+          {featuredImage && (
+            <img
+              src={"https:" + featuredImage.fields.file.url}
+              alt={title + " thumbnail"}
+            />
+          )}
         </div>
         <div className="resource-details-content">
           <div className="text-content">
             <h1>{title}</h1>
             <div className="badge">
-              {tags.map((tag) => (
+              {tags && tags.map((tag) => (
                 <Badge key={tag} text={tag} />
               ))}
             </div>
             <div className="description">
-              {documentToReactComponents(description)}
+              {description && documentToReactComponents(description)}
             </div>
           </div>
           <div className="embed-and-link">
@@ -89,7 +100,7 @@ export default function ResourceDetails({ resource }) {
               />
             )}
             <div className="resource-link-container">
-              <a
+              
                 href={resourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"

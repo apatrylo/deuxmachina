@@ -14,7 +14,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      resource: res.items, // This is an array of objects fetched from Contentful
+      resources: res.items, // Changed from 'resource' to 'resources' to match your component
     },
     revalidate: 60, // Revalidate the page every 60 seconds
   };
@@ -24,14 +24,15 @@ export async function getStaticProps() {
 //----------------------------------------------------------------
 //----------------------------------------------------------------
 // The Resources component receives the resources prop, which is an array of objects fetched from Contentful.
-export default function Resources({ resources }) {
+export default function Resources({ resources = [] }) {
   console.log("Fetched resources:", resources); // This line is for debugging purposes via console.log
 
   return (
     <div className="resource-list">
-      {resources.map((resource) => (
-        <ResourceCard key={resource.sys.id} resource={resource} />
-      ))}
+      {resources &&
+        resources.map((resource) => (
+          <ResourceCard key={resource.sys.id} resource={resource} />
+        ))}
 
       <style jsx>{`
         .resource-list {
