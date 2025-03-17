@@ -83,9 +83,7 @@ export default function ResourceDetails({ resource }) {
           <div className="text-content">
             <h1>{title}</h1>
             <div className="badge">
-              {tags && tags.map((tag) => (
-                <Badge key={tag} text={tag} />
-              ))}
+              {tags && tags.map((tag) => <Badge key={tag} text={tag} />)}
             </div>
             <div className="description">
               {description && documentToReactComponents(description)}
@@ -100,7 +98,7 @@ export default function ResourceDetails({ resource }) {
               />
             )}
             <div className="resource-link-container">
-              
+              <a
                 href={resourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -112,7 +110,7 @@ export default function ResourceDetails({ resource }) {
           </div>
         </div>
       </div>
-      {/* Styles using styled-jsx for component-scoped CSS */}
+      {/* Component-scoped styles */}
       <style jsx>{`
         .resource-details {
           max-width: 1200px;
