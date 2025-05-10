@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^16.0.1",
+    "@studio-freight/lenis": "^1.0.42",
     "contentful": "^11.4.6",
     "lucide-react": "^0.503.0",
     "next": "^15.1.6",

@@ -43,9 +43,15 @@ const ResourceCard = ({ resource }) => {
           <div className="content-overlay">
             <div className="content">
               <h2>{title}</h2>
-              <p>
-                {Array.isArray(tags) ? tags.join(", ") : "No tags available"}
-              </p>
+              <div>
+                {Array.isArray(tags)
+                  ? tags.map((tag, index) => (
+                      <span key={index} className="tag">
+                        {tag}
+                      </span>
+                    ))
+                  : "No tags available"}
+              </div>
             </div>
 
             <div className="source-link">
@@ -69,7 +75,7 @@ const ResourceCard = ({ resource }) => {
                     stroke-linejoin="round"
                     class="lucide lucide-eye"
                   >
-                    <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
                     <circle cx="12" cy="12" r="3" />
                   </svg>
                 </a>
@@ -161,9 +167,8 @@ const ResourceCard = ({ resource }) => {
             }
 
             .content {
-              margin-top: auto; /* Push content to bottom */
+              margin-top: auto;
               color: white;
-              text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
             }
 
             .content h2 {
@@ -171,10 +176,15 @@ const ResourceCard = ({ resource }) => {
               font-size: 1.25rem;
             }
 
-            .content p {
-              margin: 0;
-              font-size: 0.9rem;
-              opacity: 0.9;
+            .tag {
+              display: inline-block;
+              background: #f3f3f3;
+              color: #444;
+              padding: 4px 8px;
+              font-size: 0.75rem;
+              border-radius: 4px;
+              margin-right: 0.5rem;
+              margin-bottom: 0.5rem;
             }
           `}</style>
         </div>

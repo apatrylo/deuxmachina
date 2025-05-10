@@ -1,15 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createClient } from "contentful";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import Skeleton from "../../components/Skeleton"; // Import the Skeleton component.
+import Skeleton from "../../components/Skeleton";
 
-// Create a Contentful client
 const client = createClient({
   space: process.env.CONTENTFUL_SPACE_ID,
   accessToken: process.env.CONTENTFUL_ACCESS_KEY,
 });
 
-// Fetch paths for static generation. This function is required for dynamic routes.
 export const getStaticPaths = async () => {
   const res = await client.getEntries({ content_type: "resource" });
 
@@ -19,38 +17,31 @@ export const getStaticPaths = async () => {
 
   return {
     paths,
-    fallback: true, // Show fallback loading state if a page is not found
+    fallback: true,
   };
 };
 
-// Fetch data for each page using the slug.
 export async function getStaticProps({ params }) {
   const { items } = await client.getEntries({
     content_type: "resource",
-    "fields.slug": params.slug, // Use the slug parameter to filter the query
+    "fields.slug": params.slug,
   });
 
-  // If no resource found, return 404
   if (!items.length) {
     return { notFound: true };
   }
 
   return {
     props: {
-      resource: items[0], // Use items instead of res.items
+      resource: items[0],
     },
-    revalidate: 10, // Revalidate the page every 10 seconds
+    revalidate: 10,
   };
 }
 
-// The ResourceDetails component receives the resource prop, which is an object fetched from Contentful.
 export default function ResourceDetails({ resource }) {
-  // Add safety check for resource
-  if (!resource) {
-    return <Skeleton />;
-  }
+  if (!resource) return <Skeleton />;
 
-  // Safely destructure fields with defaults
   const {
     featuredImage,
     title = "Untitled Resource",
@@ -61,48 +52,54 @@ export default function ResourceDetails({ resource }) {
     externalEmbed,
   } = resource.fields || {};
 
-  const [isLoaded, setIsLoaded] = React.useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
   }, []);
 
-  // Return the JSX for the resource details page
   return (
     <>
-      <div className={`resource-details ${isLoaded ? "loaded" : ""}`}>
-        <div className="banner-image">
+      <div className={`resource-wrapper ${isLoaded ? "loaded" : ""}`}>
+        <div className="resource-details">
           {featuredImage && (
-            <img
-              src={"https:" + featuredImage.fields.file.url}
-              alt={title + " thumbnail"}
-            />
-          )}
-        </div>
-        <div className="resource-details-content">
-          <div className="text-content">
-            <h1>{title}</h1>
-            <div className="badges-container">
-              {tags &&
-                tags.map((tag) => (
-                  <span key={tag} className="badge">
-                    {tag}
-                  </span>
-                ))}
-            </div>
-            <div className="description">
-              {description && documentToReactComponents(description)}
-            </div>
-          </div>
-          <div className="embed-and-link">
-            {/* Render external embed content if available */}
-            {externalEmbed && (
-              <div
-                className="external-embed"
-                dangerouslySetInnerHTML={{ __html: externalEmbed }}
+            <div className="banner-image">
+              <img
+                src={`https:${featuredImage.fields.file.url}`}
+                alt={`${title} thumbnail`}
               />
-            )}
-            <div className="resource-link-container">
+            </div>
+          )}
+
+          <div className="resource-details-content">
+            <div className="text-content">
+              <h1>{title}</h1>
+
+              {!!tags.length && (
+                <div className="badges-container">
+                  {tags.map((tag) => (
+                    <span key={tag} className="badge">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {description && (
+                <div className="description">
+                  {documentToReactComponents(description)}
+                </div>
+              )}
+            </div>
+
+            <div className="embed-and-link">
+              {externalEmbed && (
+                <div
+                  className="external-embed"
+                  dangerouslySetInnerHTML={{ __html: externalEmbed }}
+                />
+              )}
+
               <a
                 href={resourceUrl}
                 target="_blank"
@@ -115,28 +112,42 @@ export default function ResourceDetails({ resource }) {
           </div>
         </div>
       </div>
-      {/* Component-scoped styles */}
+
       <style jsx>{`
-        .resource-details {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 4rem 2rem;
+        .resource-wrapper {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          text-align: center;
+          min-height: 100vh;
+          padding: 2rem 1.5rem;
+          font-family: "Inter", "Helvetica Neue", Helvetica, sans-serif;
+          background: white;
+          color: #111;
           opacity: 0;
           transform: translateY(20px);
-          transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+          transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
-        .resource-details.loaded {
+        .resource-wrapper.loaded {
           opacity: 1;
           transform: translateY(0);
         }
 
+        .resource-details {
+          width: 100%;
+          max-width: 900px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2rem;
+        }
+
         .banner-image {
           width: 100%;
-          margin-bottom: 3rem;
-          border-radius: 12px;
+          border-radius: 0.75rem;
           overflow: hidden;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .banner-image img {
@@ -146,81 +157,81 @@ export default function ResourceDetails({ resource }) {
         }
 
         .resource-details-content {
-          display: grid;
-          gap: 3rem;
-          grid-template-columns: 1fr;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2rem;
+          width: 100%;
         }
 
         .text-content {
           display: flex;
           flex-direction: column;
-          gap: 1.5rem;
+          gap: 1.25rem;
+          align-items: center;
+        }
+
+        h1 {
+          font-size: 2rem;
+          font-weight: 600;
+          margin: 0;
         }
 
         .badges-container {
           display: flex;
           flex-wrap: wrap;
           gap: 0.5rem;
+          justify-content: center;
         }
 
         .badge {
-          display: inline-block;
-          background-color: #f3f4f6;
-          color: #374151;
-          font-size: 0.875rem;
-          font-weight: 500;
-          padding: 0.375rem 0.75rem;
-          border-radius: 9999px;
-          line-height: 1;
+          background: #f3f3f3;
+          color: #444;
+          padding: 4px 8px;
+          font-size: 0.75rem;
+          border-radius: 4px;
+        }
+
+        .description {
+          font-size: 1rem;
+          color: #555;
+          line-height: 1.7;
+          max-width: 600px;
         }
 
         .embed-and-link {
           display: flex;
           flex-direction: column;
-          gap: 2rem;
+          gap: 1.5rem;
+          align-items: center;
         }
 
         .external-embed {
           width: 100%;
-          margin-bottom: 1rem;
-        }
-
-        h1 {
-          font-size: 2.5rem;
-          font-weight: 700;
-          margin: 0;
-          line-height: 1.2;
-        }
-
-        .description {
-          font-size: 1.1rem;
-          line-height: 1.6;
-          color: #4b5563;
+          max-width: 600px;
         }
 
         .resource-link {
           display: inline-block;
-          background: transparent;
-          color: #000;
-          padding: 0.75rem 2rem;
-          border-radius: 50px;
-          text-decoration: none;
+          padding: 0.75rem 1.5rem;
           font-weight: 500;
-          transition: all 0.2s;
-          border: 1px solid #000;
+          font-size: 0.9rem;
+          text-decoration: none;
+          background-color: #111;
+          color: #fff;
+          border-radius: 0.5rem;
+          transition: all 0.25s ease;
         }
 
         .resource-link:hover {
-          background: #000;
-          color: #fff;
+          background-color: #000;
           transform: translateY(-2px);
         }
 
-        /* Responsive layout for larger screens */
-        @media (min-width: 768px) {
-          .resource-details-content {
-            grid-template-columns: 1fr 1fr;
-            align-items: start;
+        @media (max-width: 768px) {
+          .description,
+          .external-embed {
+            text-align: center;
           }
         }
       `}</style>
